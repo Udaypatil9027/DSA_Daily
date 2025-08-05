@@ -1,57 +1,52 @@
 import java.util.Scanner;
+
 public class Q06_InvertedNumber {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        System.out.print("Enter a Number that should be complete");    // if number is 6 digit and start from 1 then it
-        int num = sc.nextInt();                       //should contain 1 to 6 all digits like = 1,2,3,4,5,6 number should form using given condition
-        int len = countdigit(num);
-        int[] arr = new int[len+1];
+        System.out.print("Enter a Number: ");
+        int num = sc.nextInt();
 
-        int start = mindig(num);
+        int minDigit = 9;
+        int maxDigit = 0;
+        int temp = num;
+
+        boolean[] seen = new boolean[10]; // For digits 0-9
+        int[] positionArr = new int[10];  // Store position of digits (for inversion)
         int position = 1;
 
-        while(num !=0){
-            int digit = num%10;
-            arr[digit] = position;
-            num /= 10;
+        while (temp != 0) {
+            int digit = temp % 10;
+
+            if (seen[digit]) {
+                System.out.println("Duplicate Digit Found: " + digit);
+                return;
+            }
+
+            seen[digit] = true;
+            positionArr[digit] = position;
+
+            if (digit < minDigit) {
+                minDigit = digit;
+            }
+            if (digit > maxDigit) {
+                maxDigit = digit;
+            }
+            temp /= 10;
             position++;
         }
 
-        for(int i=1; i<=len; i++){
-            System.out.print(arr[i]);
-        }
-
-    }
-    public static int countdigit(int num){
-        int count = 0;
-        while(num != 0){
-            num /= 10;
-            count++;
-        }
-        return count;
-    }
-
-
-    public static int mindig(int num){
-        int digit=0;
-       int len =  countdigit(num);
-        int []arr = new int[len];
-
-        while(num != 0 ){
-            for(int i=0; i<len; i++){
-                digit = num%10;
-                arr[i] = digit;
-                num /= 10;
-            }
-        }
-        int minnum = arr[0];
-        for(int i=1; i<len; i++){
-            if(arr[i]<minnum){
-                minnum = arr[i];
+        // Check if all digits from min to max are present
+        for (int i = minDigit; i <= maxDigit; i++) {
+            if (!seen[i]) {
+                System.out.println("Missing Digit: " + i);
+                return;
             }
         }
 
-        return minnum;
+        // All checks passed
+        System.out.print("Inverted Number: ");
+        for (int i = minDigit; i <= maxDigit; i++) {
+            System.out.print(positionArr[i]);
+        }
     }
-
 }
